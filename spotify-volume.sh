@@ -26,7 +26,7 @@ toggle_mute() {
     if [[ -f "$STATE_FILE" ]]; then
       previous=$(<"$STATE_FILE")
       set_volume "$previous"
-      echo "Unmuted → $previous%"
+      print_volume_bar "$previous"
     else
       set_volume 50  # fallback value
       echo "Unmuted → 50% (default)"
@@ -34,29 +34,48 @@ toggle_mute() {
   else
     echo "$current" > "$STATE_FILE"
     set_volume 0
-    echo "Muted"
+    echo "Muted 🔇"
   fi
 }
+
+print_volume_bar() {
+  local vol=$1
+  local blocks=$(( vol / 10 ))
+  local bar=""
+  for ((i = 0; i < 10; i++)); do
+    if (( i < blocks )); then
+      bar+="█"
+    else
+      bar+="░"
+    fi
+  done
+  echo "🔊 [$bar] ${vol}%"
+}
+
 
 # Parse arguments
 case "${1:-}" in
   --get)
-    get_volume
+    vol=$(get_volume)
+    print_volume_bar "$vol"
     ;;
   --set)
     set_volume "$2"
+    print_volume_bar "$2" 
     ;;
   --up)
     current=$(get_volume)
     new=$(( current + $2 ))
     if (( new > 100 )); then new=100; fi
     set_volume "$new"
+    print_volume_bar "$new"
     ;;
   --down)
     current=$(get_volume)
     new=$(( current - $2 ))
     if (( new < 0 )); then new=0; fi
     set_volume "$new"
+    print_volume_bar "$new"
     ;;
   --toggle-mute)
     toggle_mute
