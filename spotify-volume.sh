@@ -16,7 +16,8 @@ get_volume() {
 
 # Set Spotify volume to a specific number
 set_volume() {
-  osascript -e "tell application \"Spotify\" to set sound volume to $1"
+  new_volume=$(( $1 + 1 ))
+  osascript -e "tell application \"Spotify\" to set sound volume to $new_volume"
 }
 
 # Toggle mute
