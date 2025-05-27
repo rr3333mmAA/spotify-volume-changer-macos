@@ -4,6 +4,8 @@
 #   ./spotify-volume.sh --set 70
 #   ./spotify-volume.sh --up 10
 #   ./spotify-volume.sh --down 15
+#   ./spotify-volume.sh --get
+#   ./spotify-volume.sh --toggle-mute
 
 set -euo pipefail
 
